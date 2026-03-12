@@ -1,1 +1,1 @@
-# GA02---Design-Pattern---Army-Game
+# GA02-Design-Pattern-Army-Game
