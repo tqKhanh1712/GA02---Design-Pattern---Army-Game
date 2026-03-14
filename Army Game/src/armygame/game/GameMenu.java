@@ -14,6 +14,7 @@ import armygame.proxy.SoldierProxy;
 import armygame.visitor.CountVisitor;
 import armygame.visitor.DisplayVisitor;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
@@ -39,10 +40,11 @@ public class GameMenu {
             switch (choice) {
                 case "1" -> handleSelectEra();
                 case "2" -> handleCreateArmy();
-                case "3" -> handleAddSoldierToArmy();
-                case "4" -> handleViewArmies();
-                case "5" -> handleStartBattle();
-                case "6" -> handleViewBattleReport();
+                case "3" -> handleCreateGroup();
+                case "4" -> handleAddSoldierToArmy();
+                case "5" -> handleViewArmies();
+                case "6" -> handleStartBattle();
+                case "7" -> handleViewBattleReport();
                 case "0" -> running = false;
                 default  -> System.out.println("  Lựa chọn không hợp lệ, thử lại.");
             }
@@ -61,10 +63,11 @@ public class GameMenu {
         System.out.println("══════════════════════════════════");
         System.out.println("  [1] Chọn thế hệ (Era)");
         System.out.println("  [2] Tạo quân đội mới");
-        System.out.println("  [3] Thêm binh lính vào quân đội");
-        System.out.println("  [4] Xem danh sách quân đội");
-        System.out.println("  [5] Bắt đầu trận chiến");
-        System.out.println("  [6] Xem báo cáo trận chiến");
+        System.out.println("  [3] Tạo nhóm trong quân đội");
+        System.out.println("  [4] Thêm binh lính vào quân đội/nhóm");
+        System.out.println("  [5] Xem danh sách quân đội");
+        System.out.println("  [6] Bắt đầu trận chiến");
+        System.out.println("  [7] Xem báo cáo trận chiến");
         System.out.println("  [0] Thoát");
         System.out.print("  Nhập lựa chọn: ");
     }
@@ -104,7 +107,7 @@ public class GameMenu {
                 + " [" + army.getEraName() + "]");
     }
 
-    // ── [3] Thêm binh lính ───────────────────────────────────────────────
+    // ── [4] Thêm binh lính ───────────────────────────────────────────────
     private void handleAddSoldierToArmy() {
         if (state.getArmies().isEmpty()) {
             System.out.println("  Chưa có quân đội nào!"); return;
@@ -119,7 +122,8 @@ public class GameMenu {
         // Chọn nhóm hoặc thêm vào root
         System.out.println("\n  Thêm vào:");
         System.out.println("  [0] Trực tiếp vào quân đội");
-        printGroupList(army);
+        List<Group> groups = listAllGroups(army);
+        printGroupList(groups);
         System.out.print("  Lựa chọn (0 = quân đội, 1+ = nhóm): ");
         String grpChoice = scanner.nextLine().trim();
 
@@ -144,7 +148,7 @@ public class GameMenu {
             army.add(leaf);
         } else {
             int grpIdx = parseIndex(grpChoice) - 1;
-            Group group = getGroupAt(army, grpIdx);
+            Group group = (grpIdx >= 0 && grpIdx < groups.size()) ? groups.get(grpIdx) : null;
             if (group == null) { System.out.println("  Nhóm không tồn tại, thêm vào quân đội."); army.add(leaf); }
             else group.add(leaf);
         }
@@ -152,7 +156,41 @@ public class GameMenu {
         System.out.println("  → Đã thêm: " + proxy.describe());
     }
 
-    // ── [4] Xem quân đội ─────────────────────────────────────────────────
+    // ── [3] Tạo nhóm ────────────────────────────────────────────────────
+    private void handleCreateGroup() {
+        if (state.getArmies().isEmpty()) {
+            System.out.println("  Chưa có quân đội nào!"); return;
+        }
+        printArmyList();
+        System.out.print("  Chọn quân đội (số thứ tự): ");
+        Army army = state.getArmy(parseIndex(scanner.nextLine()));
+        if (army == null) { System.out.println("  Chỉ số không hợp lệ."); return; }
+
+        List<Group> groups = listAllGroups(army);
+        System.out.println("\n  Thêm nhóm vào:");
+        System.out.println("  [0] Quân đội (root)");
+        printGroupList(groups);
+        System.out.print("  Lựa chọn (0 = quân đội, 1+ = nhóm cha): ");
+        String parentChoice = scanner.nextLine().trim();
+
+        System.out.print("  Tên nhóm: ");
+        String groupName = scanner.nextLine().trim();
+        if (groupName.isBlank()) { System.out.println("  Tên không được trống."); return; }
+
+        Group newGroup = new Group(groupName);
+        if (parentChoice.equals("0")) {
+            army.add(newGroup);
+        } else {
+            int grpIdx = parseIndex(parentChoice) - 1;
+            Group parent = (grpIdx >= 0 && grpIdx < groups.size()) ? groups.get(grpIdx) : null;
+            if (parent == null) { System.out.println("  Nhóm không tồn tại, thêm vào quân đội."); army.add(newGroup); }
+            else parent.add(newGroup);
+        }
+
+        System.out.println("  → Đã tạo nhóm: " + groupName);
+    }
+
+    // ── [5] Xem quân đội ─────────────────────────────────────────────────
     private void handleViewArmies() {
         if (state.getArmies().isEmpty()) {
             System.out.println("  Chưa có quân đội nào."); return;
@@ -173,7 +211,7 @@ public class GameMenu {
         }
     }
 
-    // ── [5] Bắt đầu trận chiến ───────────────────────────────────────────
+    // ── [6] Bắt đầu trận chiến ───────────────────────────────────────────
     private void handleStartBattle() {
         if (state.getArmies().size() < 2) {
             System.out.println("  Cần ít nhất 2 quân đội để chiến đấu!"); return;
@@ -202,7 +240,7 @@ public class GameMenu {
         battle.startBattle();
     }
 
-    // ── [6] Báo cáo ──────────────────────────────────────────────────────
+    // ── [7] Báo cáo ──────────────────────────────────────────────────────
     private void handleViewBattleReport() {
         if (state.getCurrentBattle() == null) {
             System.out.println("  Chưa có trận chiến nào được thực hiện."); return;
@@ -231,13 +269,10 @@ public class GameMenu {
         }
     }
 
-    private void printGroupList(Army army) {
-        int[] idx = {1};
-        army.getMembers().forEach(m -> {
-            if (m instanceof Group g) {
-                System.out.printf("  [%d] Nhóm: %s%n", idx[0]++, g.getName());
-            }
-        });
+    private void printGroupList(List<Group> groups) {
+        for (int i = 0; i < groups.size(); i++) {
+            System.out.printf("  [%d] Nhóm: %s%n", i + 1, groups.get(i).getName());
+        }
     }
 
     private int parseIndex(String input) {
@@ -245,15 +280,19 @@ public class GameMenu {
         catch (NumberFormatException e) { return -1; }
     }
 
-    private Group getGroupAt(Army army, int idx) {
-        int i = 0;
-        for (var m : army.getMembers()) {
+    private List<Group> listAllGroups(Army army) {
+        List<Group> result = new ArrayList<>();
+        collectGroups(army, result);
+        return result;
+    }
+
+    private void collectGroups(Group current, List<Group> out) {
+        for (var m : current.getMembers()) {
             if (m instanceof Group g) {
-                if (i == idx) return g;
-                i++;
+                out.add(g);
+                collectGroups(g, out);
             }
         }
-        return null;
     }
 
     /**

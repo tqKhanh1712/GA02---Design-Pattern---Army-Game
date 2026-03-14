@@ -111,6 +111,20 @@ cd "Army Game"
 .\run.bat
 ```
 
+#### Chạy Demo tự động (Batch file - khuyên dùng nhất)
+**Cách đơn giản nhất - chỉ cần 1 click:**
+1. Mở thư mục `Army Game`
+2. Double-click vào file `run_demo.bat`
+3. Demo sẽ tự động: tạo 2 quân đội × 2 nhóm/đội × 10 lính/nhóm → bắt đầu trận chiến → xem báo cáo → thoát
+
+**Hoặc chạy từ CMD:**
+```cmd
+cd "Army Game"
+run_demo.bat
+```
+
+**Lưu ý**: Để hiển thị tiếng Việt đúng, mở file `HUONG_DAN_FIX_CHU.md` trong thư mục gốc để xem hướng dẫn chi tiết.
+
 ### Cách chạy thủ công (Cross-platform)
 
 #### Biên dịch:
@@ -144,10 +158,11 @@ Khi chạy game, bạn sẽ thấy menu với các lựa chọn:
 ══════════════════════════════════
   [1] Chọn thế hệ (Era)
   [2] Tạo quân đội mới
-  [3] Thêm binh lính vào quân đội
-  [4] Xem danh sách quân đội
-  [5] Bắt đầu trận chiến
-  [6] Xem báo cáo trận chiến
+  [3] Tạo nhóm trong quân đội
+  [4] Thêm binh lính vào quân đội/nhóm
+  [5] Xem danh sách quân đội
+  [6] Bắt đầu trận chiến
+  [7] Xem báo cáo trận chiến
   [0] Thoát
 ```
 
@@ -162,22 +177,27 @@ Khi chạy game, bạn sẽ thấy menu với các lựa chọn:
    - Nhập tên quân đội
    - Quân đội được tạo và lưu vào danh sách
 
-3. **Thêm binh lính** (Menu [3])
+3. **Tạo nhóm** (Menu [3])
    - Chọn quân đội
-   - Chọn loại binh lính (Infantry, Cavalry)
-   - Trang bị vũ khí và giáp
-   - Binh lính được thêm vào quân đội
+   - Chọn nơi chèn: `[0]` vào quân đội hoặc `[1+]` vào nhóm cha đã có
+   - Nhập tên nhóm, nhóm sẽ xuất hiện trong danh sách để thêm lính
 
-4. **Xem quân đội** (Menu [4])
+4. **Thêm binh lính** (Menu [4])
+   - Chọn quân đội
+   - Chọn nơi chèn: `[0]` vào quân đội hoặc `[1+]` vào nhóm (hiển thị từ danh sách nhóm)
+   - Chọn loại binh lính (Infantry, Cavalry)
+   - Binh lính được thêm vào vị trí đã chọn
+
+5. **Xem quân đội** (Menu [5])
    - Hiển thị danh sách tất cả quân đội
    - Xem chi tiết binh lính và trang bị
 
-5. **Bắt đầu trận chiến** (Menu [5])
+6. **Bắt đầu trận chiến** (Menu [6])
    - Chọn 2 quân đội để chiến đấu
    - Hệ thống tự động mô phỏng trận chiến
    - Observer theo dõi và báo cáo sự kiện
 
-6. **Xem báo cáo** (Menu [6])
+7. **Xem báo cáo** (Menu [7])
    - Xem kết quả trận chiến
    - Số lượng tử vong và thống kê
 
@@ -230,5 +250,4 @@ This project is for educational purposes.
 
 ---
 **Developed with ❤️ using Design Patterns**
-
 
