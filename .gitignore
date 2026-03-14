@@ -1,0 +1,33 @@
+# IDE
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# Compiled files
+*.class
+*.jar
+*.war
+*.nar
+*.ear
+
+# Build
+target/
+.gradle/
+build/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Temp
+*.tmp
+*.swp
+*.swo
+*~
+
