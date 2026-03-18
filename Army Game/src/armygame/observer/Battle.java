@@ -36,7 +36,7 @@ public class Battle {
         observers.forEach(o -> o.onSoldierDeath(soldier, armyName));
     }
 
-    private void notifyBattleEnd(String winner) {
+    public void notifyBattleEnd(String winner) {
         observers.forEach(o -> o.onBattleEnd(winner, totalDeaths));
     }
 

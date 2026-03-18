@@ -39,6 +39,22 @@ public class Group implements MilitaryUnit {
                 .sum();
     }
 
+    public int getDefense() {
+        return members.stream()
+                .filter(MilitaryUnit::hasAliveMembers)
+                .mapToInt(this::getMemberDefense)
+                .sum();
+    }
+
+    private int getMemberDefense(MilitaryUnit unit) {
+        if (unit instanceof SoldierLeaf leaf) {
+            return leaf.getSoldier().getDefense();
+        } else if (unit instanceof Group g) {
+            return g.getDefense();
+        }
+        return 0;
+    }
+
     @Override
     public void defend(int totalDamage) {
         List<MilitaryUnit> alive = members.stream()

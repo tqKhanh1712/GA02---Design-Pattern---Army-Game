@@ -31,3 +31,10 @@ logs/
 *.swo
 *~
 
+# Internal archived docs
+docs/archive-md/
+
+# Local backup/temporary UI files
+Army Game/src/armygame/game/GameUIFrame_OLD.java
+Army Game/src/armygame/game/GameUIFrame_V2.java
+
